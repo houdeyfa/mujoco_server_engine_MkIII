@@ -24,7 +24,20 @@ git clone https://github.com/google-deepmind/mujoco_menagerie ~/mujoco_menagerie
 The server looks for it at `~/mujoco_menagerie`. Elsewhere? Either set `export MUJOCO_MENAGERIE=/path/to/mujoco_menagerie`
 or put `menagerie: /path/to/mujoco_menagerie` in a config file.
 
-## 3. Run it
+## 3. Get the client
+
+The client that drives this server (the `WorldController`, the examples and the benchmark scorer) lives in its own repo,
+because the same client is used with every version of the server. Clone it into a folder named `client/` here
+(`client/` is git-ignored, and the tests expect that path):
+
+```bash
+git clone https://github.com/houdeyfa/mujoco_client_engine client
+pip install -r client/requirements.txt
+```
+
+The client does nothing without a running server. Its README explains how to use it.
+
+## 4. Run it
 
 ```bash
 python server.py config/ur10e_robotiq.yaml               # no window
@@ -33,7 +46,7 @@ python client/examples/pick_place.py ur                  # in a second terminal:
 ```
 
 Only one server at a time: it listens on port 8988 (`--port N` to change it).
-Tests: start a server, then `python tests/fake_running_client.py`.
+Tests: start a server, then `python tests/fake_running_client.py` (needs the client from step 3).
 
 ## World files (`worlds/`)
 

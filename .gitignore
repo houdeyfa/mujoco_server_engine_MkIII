@@ -10,3 +10,6 @@ __pycache__/
 .DS_Store
 MUJOCO_LOG.TXT
 .mesh_cache/
+
+# the client has its own repo (see README, step 3)
+client/
