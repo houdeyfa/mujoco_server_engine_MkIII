@@ -1,0 +1,42 @@
+# Franka Panda as in speedrun11: strong hand, TCP between the fingertips, Menagerie `home` keyframe.
+menagerie: ~/mujoco_menagerie     # or set $MUJOCO_MENAGERIE
+world: default                  # worlds/default.yaml: physics, floor, sky, lights
+server: {port: 8988}
+
+robots:
+  - name: panda
+    model: franka_emika_panda/panda.xml
+    pos: [0, 0, 0]
+    gravcomp: true                # arm floats like a real Panda's controller makes it
+    home: home                    # keyframe `home` of panda.xml: arm pose AND the hand open (ctrl 255)
+
+    sites:
+      - name: tcp                 # between the fingertips
+        body: hand
+        pos: [0, 0, 0.1034]
+    end_effector: tcp
+
+    gripper:                      # Menagerie's hand is weak (kp 100, force 100); boosted like speedrun11
+      actuator: actuator8         # ctrl 0 closed .. 255 open
+      open_ctrl: 255              # which end of the ctrl range is OPEN (the Robotiq is the other way round)
+      kp: 3000                    # speedrun11 uses 6000, but at a 2 ms timestep that rattles the fingers (9 mm slip
+                                  # lifting a cube, tests/fake_running_client.py); 3000 holds to 0.2 mm. Heavy parts: raise it and re-test
+      force: 900
+
+    ik:
+      lead: 0.1                   # = kv / kp of the Panda servos; velocity feedforward
+
+cameras:
+  - name: overview            # floating in the air, fixed in the scene
+    pos: [1.6, -1.6, 1.4]
+    lookat: [0.3, 0.0, 0.3]
+    fovy: 45
+    resolution: [640, 480]
+
+objects:
+  - name: cube
+    type: box
+    size: [0.025, 0.025, 0.025]
+    pos: [0.5, 0, 0.025]
+    rgba: [0.9, 0.2, 0.2, 1]
+    mass: 0.05

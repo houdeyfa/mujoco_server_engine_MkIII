@@ -1,0 +1,21 @@
+# Same as default but with MuJoCo's own soft contacts (no override): for comparing against the stiff worlds.
+physics:
+  timestep: 0.002
+  gravity: [0, 0, -9.81]
+  integrator: implicitfast   # euler | implicit | implicitfast | rk4
+  cone: elliptic             # elliptic = firmer grasps than pyramidal
+  impratio: 10
+  memory: 209715200          # bytes of arena memory (200 MB)
+
+floor:
+  texture: none
+  color: [0.85, 0.85, 0.85, 1]
+
+sky:
+  top: [0.4, 0.6, 0.8]
+  bottom: [0, 0, 0]
+
+lights:
+  - pos: [0, 0, 3]
+    dir: [0, 0, -1]
+    diffuse: 0.8

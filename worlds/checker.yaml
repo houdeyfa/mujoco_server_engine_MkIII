@@ -1,0 +1,29 @@
+# Checkerboard floor, 10 cm squares, blue-ish sky.
+physics:
+  timestep: 0.002
+  gravity: [0, 0, -9.81]
+  integrator: implicitfast
+  cone: elliptic
+  impratio: 10
+  memory: 209715200
+
+  contact_override:          # one stiff solref/solimp for every contact; remove the block for soft MuJoCo defaults
+    solref: [0.004, 1]       # stiffest allowed = 2 x timestep
+    solimp: [0.99, 0.99, 0.001, 0.5, 2]
+
+floor:
+  texture: checker
+  colors:
+    - [0.2, 0.3, 0.4]
+    - [0.3, 0.4, 0.5]
+  square: 0.1                # side of one square, metres
+  reflectance: 0.1
+
+sky:
+  top: [0.4, 0.6, 0.8]
+  bottom: [0, 0, 0]
+
+lights:
+  - pos: [0, 0, 3]
+    dir: [0, 0, -1]
+    diffuse: 0.8

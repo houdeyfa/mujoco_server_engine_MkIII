@@ -1,0 +1,72 @@
+# UR10e + Robotiq 2F-85 on its flange, two objects on the floor.
+menagerie: ~/mujoco_menagerie
+world: checker                  # worlds/checker.yaml: physics, floor, sky, lights
+server: {port: 8988}
+
+robots:
+  - name: ur
+    model: universal_robots_ur10e/ur10e.xml
+    pos: [0, 0, 0]
+    euler: [0, 0, 0]              # degrees
+    gravcomp: true
+    home: [-1.5708, -1.5708, 1.5708, -1.5708, -1.5708, 0]   # radians
+    tool:
+      model: robotiq_2f85/2f85.xml
+      body: base_mount
+      site: attachment_site
+
+    gripper:                        # grip strength, as in speedrun12 (2F-85: ctrl 0 open .. 255 closed)
+      actuator: tool/fingers_actuator
+      kp: 100
+      force: 5                      # N m per finger driver
+
+cameras:
+  - name: overview            # floating in the air, fixed in the scene
+    pos: [1.6, -1.6, 1.4]
+    lookat: [0.3, 0.0, 0.3]
+    fovy: 45
+    resolution: [640, 480]
+
+objects:
+  - name: cube     
+    type: box      
+    size: [0.03, 0.03, 0.03]
+    pos: [0.6, 0.2, 0.03]
+    rgba: [0.9, 0.2, 0.2, 1]
+    mass: 0.1
+
+  - name: cylinder
+    type: cylinder
+    size: [0.03, 0.05]
+    pos: [0.6, -0.2, 0.05]
+    rgba: [0.2, 0.7, 0.3, 1]
+    mass: 0.2
+
+markers:
+  - name: ref_a
+    id: 20
+    dictionary: DICT_4X4_50
+    size: 0.05                      # 50 mm printed square
+    margin: 0.01                    # quiet zone; a tag without one may not decode
+    reference: true
+    position: [0.35, 0.40, 0.001]  # lying on the floor, face-up
+    orientation: [0, 0, 0]
+
+  - name: ref_b
+    id: 21
+    dictionary: DICT_4X4_50
+    size: 0.05
+    margin: 0.01
+    reference: true
+    position: [0.35, -0.40, 0.001]
+    orientation: [0, 0, 0]
+
+  - name: cube_tag
+    id: 7
+    dictionary: DICT_4X4_50
+    size: 0.035                     # 35 mm tag on a 60 mm cube face
+    margin: 0.005
+    attach_to:                      # rides the cube: pick the cube up and it moves
+      body: cube
+    position: [0, 0, 0.0305]        # cube half-height + a hair, in the cube frame
+    orientation: [0, 0, 0]          # facing up

@@ -1,0 +1,75 @@
+# UR10e + Robotiq 2F-85 and a planetary gearbox (sun, 3 planets, ring) lying on the floor.
+# Same robot as ur10e_robotiq.yaml. The gear STLs are in mm; the server slices them into convex pieces on first use
+# (~10 s per mesh, then cached in .mesh_cache/).
+menagerie: ~/mujoco_menagerie
+world: checker                  # worlds/checker.yaml: physics, floor, sky, lights
+server: {port: 8988}
+
+robots:
+  - name: ur
+    model: universal_robots_ur10e/ur10e.xml
+    pos: [0, 0, 0]
+    euler: [0, 0, 0]              # degrees
+    gravcomp: true
+    home: [-1.5708, -1.5708, 1.5708, -1.5708, -1.5708, 0]   # radians
+    tool:
+      model: robotiq_2f85/2f85.xml
+      body: base_mount
+      site: attachment_site
+
+    gripper:                        # grip strength, as in speedrun12 (2F-85: ctrl 0 open .. 255 closed)
+      actuator: tool/fingers_actuator
+      kp: 100
+      force: 5                      # N m per finger driver
+
+cameras:
+  - name: overview            # floating in the air, fixed in the scene
+    pos: [1.6, -1.6, 1.4]
+    lookat: [0.45, 0.0, 0.1]
+    fovy: 45
+    resolution: [640, 480]
+
+  - name: top                 # straight above the gearbox
+    pos: [0.47, 0.0, 0.8]
+    lookat: [0.47, 0.0, 0.0]
+    fovy: 45
+    resolution: [640, 480]
+
+# scale 0.004 = metres per STL unit (mm): 4x real size, a 68 mm planet fits the Robotiq's 85 mm opening.
+# The ring's edge sits 35 cm in front of the robot: x = 0.35 + 30 * scale = 0.47. Planets orbit at 15 * scale = 0.06.
+objects:
+  - name: sun
+    mesh: assets/gearbox/gear.stl
+    scale: 0.004
+    collision: parts            # drawn as the real gear, collides as its convex pieces
+    pos: [0.47, 0.0, 0.0]
+    rgba: [1.0, 0.5, 0.0, 0.3]
+
+  - name: planet0
+    mesh: assets/gearbox/gear.stl
+    scale: 0.004
+    collision: parts
+    pos: [0.53, 0.0, 0.0]
+    rgba: [0.2, 0.6, 1.0, 1]
+
+  - name: planet1
+    mesh: assets/gearbox/gear.stl
+    scale: 0.004
+    collision: parts
+    pos: [0.44, 0.052, 0.0]
+    rgba: [0.2, 0.6, 1.0, 1]
+
+  - name: planet2
+    mesh: assets/gearbox/gear.stl
+    scale: 0.004
+    collision: parts
+    pos: [0.44, -0.052, 0.0]
+    rgba: [0.2, 0.6, 1.0, 1]
+
+  - name: ring
+    mesh: assets/gearbox/ring.stl
+    scale: 0.004
+    collision: parts
+    pos: [0.47, 0.0, 0.0]
+    euler: [0, 0, 4]            # degrees: the teeth phase that lets the planets mesh
+    rgba: [0.7, 0.7, 0.7, 1]
