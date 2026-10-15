@@ -6,7 +6,7 @@ The scene (robots, objects, cameras, markers) comes from a YAML file.
 ## 1. Get the code
 
 ```bash
-git clone <YOUR-REPO-URL> mujoco_server
+git clone https://github.com/houdeyfa/mujoco_server_engine_MkIII.git mujoco_server
 cd mujoco_server
 pip install mujoco websockets pyyaml numpy pillow opencv-python coacd trimesh
 ```

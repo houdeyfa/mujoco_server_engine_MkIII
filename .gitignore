@@ -1,0 +1,12 @@
+# old attempts, kept locally only
+pybullet_template_server_TO_BE_DELETED/
+speedrun*.py
+speedrun_assets/
+
+# python / macOS
+__pycache__/
+*.pyc
+.venv/
+.DS_Store
+MUJOCO_LOG.TXT
+.mesh_cache/
